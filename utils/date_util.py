@@ -16,14 +16,10 @@ def get_nextday(add_days: int = 0) -> int:
         int: Номер дня недели (0 - понедельник, 6 - воскресенье)
     """
     current_date = datetime.now() + timedelta(days=add_days)
-    weekday = current_date.weekday()
-    
-    if weekday == 6:
-        return 0
-    return weekday
+    return current_date.weekday()
 
 def preobraze():
-    return WEEKDAY_NAMES[get_nextday()]
+    return WEEKDAY_NAMES[get_nextday(0)]
 
 def init_schedule_db():
     """Инициализация таблицы расписания"""

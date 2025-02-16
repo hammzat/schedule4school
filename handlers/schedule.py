@@ -21,12 +21,14 @@ async def my_schedule(message: Message):
     
     keyboard = Keyboard(inline=True)
     days = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница"]
+    daysRow = ["Вторник", "Среда", "Пятница"]
     if has_saturday_classes(class_):
         days.append("Суббота")
-        
+    
     for day in days:
         keyboard.add(Text(day))
-        keyboard.row()
+        if day in daysRow:
+            keyboard.row()
     
     await message.answer(f"Выберите день (сегодня {preobraze()})", keyboard=keyboard)
     conn.close()
