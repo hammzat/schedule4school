@@ -1,5 +1,8 @@
 import os
 from dotenv import load_dotenv
+from vkbottle import BuiltinStateDispenser
+
+state_dispenser = BuiltinStateDispenser()
 
 load_dotenv()
 

@@ -1,5 +1,44 @@
-from vkbottle import Keyboard, KeyboardButtonColor, Text, EMPTY_KEYBOARD
+from vkbottle import Keyboard, Text, EMPTY_KEYBOARD, KeyboardButtonColor
+from utils.consts import CLASS_CONFIG
+from utils.classes import is_valid_class
 
+def class_select(class_name: str) -> Keyboard:
+    """
+    Создает клавиатуру с днями недели для выбранного класса.
+    
+    Args:
+        class_name (str): Название класса (например, "8а")
+        
+    Returns:
+        Keyboard: Клавиатура VK с кнопками дней недели
+    """
+    if not is_valid_class(class_name):
+        return EMPTY_KEYBOARD
+        
+    grade = class_name[:-1]
+    letter = class_name[-1].lower()
+    
+    keyboard = Keyboard(inline=True)
+    prefix = f"{'a' if letter == 'а' else 'b'}{grade}"
+    
+    day_layout = [
+        [("Понедельник", "monday"), ("Вторник", "vtornik")],
+        [("Среда", "sreda")],
+        [("Четверг", "chetverg"), ("Пятница", "pyatnica")],
+        [("Суббота", "sb")]
+    ]
+    
+    for row in day_layout:
+        for short_name, day_code in row:
+            if short_name == "Суббота" and not CLASS_CONFIG[grade]['has_saturday']:
+                continue
+            keyboard.add(Text(
+                short_name,
+                payload={"schedule": f"{prefix}_{day_code}"}
+            ))
+        keyboard.row()
+    
+    return keyboard 
 
 def generate_mainkeyboard() -> Keyboard:
     keyboard = Keyboard(one_time=False)

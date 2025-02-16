@@ -6,11 +6,11 @@ from vkbottle.bot import Message
 import sqlite3
 import logging
 
-async def isAdmin(bot: Bot, user_id: int) -> bool:
+async def isAdmin(message: Message, user_id: int) -> bool:
     try:
-        groups = await bot.api.groups.get_by_id()
+        groups = await message.ctx_api.groups.get_by_id()
         group = groups.groups[0]
-        managers = await bot.api.groups.get_members(group_id=group.id, filter="managers")
+        managers = await message.ctx_api.groups.get_members(group_id=group.id, filter="managers")
         for manager in managers.items:
             if manager.id == user_id:
                 return True

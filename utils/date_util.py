@@ -2,31 +2,28 @@ import datetime as dt
 import sqlite3
 import re
 from typing import Dict, List, Tuple
+from utils.consts import *
+from datetime import datetime, timedelta
 
-def get_nextday(next=False):
-    '''0 - понедельник 1 - вторник 2 - среда 3 - четверг 4 - пятница 5 - суббота 6 - воскресенье'''
-    today = dt.datetime.today().weekday()
-    return today if not next else (0 if today + 1 == 7 else today + 1)
-
-WEEKDAY_NAMES = {
-    0: 'понедельник',
-    1: 'вторник',
-    2: 'среда',
-    3: 'четверг',
-    4: 'пятница',
-    5: 'суббота',
-    6: 'воскресенье'
-}
+def get_nextday(add_days: int = 0) -> int:
+    """
+    Определяет следующий учебный день с учетом смещения.
+    
+    Args:
+        add_days (int): Количество дней для смещения вперед (0 - сегодня, 1 - завтра и т.д.)
+        
+    Returns:
+        int: Номер дня недели (0 - понедельник, 6 - воскресенье)
+    """
+    current_date = datetime.now() + timedelta(days=add_days)
+    weekday = current_date.weekday()
+    
+    if weekday == 6:
+        return 0
+    return weekday
 
 def preobraze():
     return WEEKDAY_NAMES[get_nextday()]
-
-# Классы с занятиями по субботам
-SATURDAY_CLASSES = {'8а', '8б', '9а', '9б', '10а', '11а'}
-ALL_CLASSES = {
-    '5а', '5б', '6а', '6б', '7а', '7б',
-    '8а', '8б', '9а', '9б', '10а', '11а'
-}
 
 def init_schedule_db():
     """Инициализация таблицы расписания"""
